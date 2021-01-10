@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lagou.mapper.UserMapper">
+
+    <!-- 1.封装一个返回类型为resultMap -->
+    <resultMap id="resultMap" type="user">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="username" jdbcType="VARCHAR" javaType="string"/>
+            <arg column="password" jdbcType="VARCHAR" javaType="string"/>
+            <arg column="email" jdbcType="VARCHAR" javaType="string"/>
+            <arg column="phone" jdbcType="VARCHAR" javaType="string"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+
+    <!-- 2.抽取一个sql片段   -->
+    <sql id="field">
+        id , username,password ,email ,phone ,create_time,update_time
+    </sql>
+
+    <!-- 3.根据name查询用户名是否存在   -->
+    <select id="checkUserName" resultType="int" parameterType="String">
+        select count(1) from user where username = #{username}
+    </select>
+
+    <!-- 4.使用用户名和密码登录   -->
+    <select id="selectLogin" resultMap="resultMap">
+        select <include refid="field"/>
+        from user
+        where username = #{username}
+        and password = #{password}
+    </select>
+
+    <!-- 5.查询所有用户信息   -->
+    <select id="userList" resultType="user">
+        select <include refid="field"/> from user order by id asc
+    </select>
+
+
+    <!-- 6.校验邮箱是否存在   -->
+    <select id="checkEmail" resultType="int" parameterType="string">
+        select count(1) from user where email = #{email}
+    </select>
+
+    <!-- 7.添加用户   -->
+    <insert id="insert" parameterType="user">
+        insert into user (id,username,password,email ,phone ,create_time,update_time)
+        values (#{id},#{username},#{password},#{email},#{phone},now(),now())
+    </insert>
+
+    <!-- 8.根据主键查询用户   -->
+    <select id="selectByPrimaryKey" parameterType="int" resultType="user">
+        select <include refid="field"/> from user
+        where id = #{id}
+    </select>
+
+    <!-- 9.根据主键删除用户   -->
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        delete from user
+        where id = #{id}
+    </delete>
+</mapper>

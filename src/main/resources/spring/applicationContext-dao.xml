@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--1)加载外部数据库信息 jdbc.properites-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--2)数据源的配置 druid-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+       <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--3)SqlSessionFactoryBean  (加载dataSource , 加载mybatis-config.xml)-->
+    <bean id="sqlSesionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入连接池  -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 加载mybatis-config.xml  -->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+    </bean>
+
+    <!--4)Mapper包扫描-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描映射文件比如:AccountMapper.xml 加载该文件; 还会扫描接口AccountMapper接口创建代理对象  -->
+        <property name="basePackage" value="com.lagou.mapper"/>
+    </bean>
+</beans>

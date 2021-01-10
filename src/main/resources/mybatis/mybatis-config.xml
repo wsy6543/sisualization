@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--    1)驼峰命名-->
+    <settings>
+        <!-- model中模型对象 userName , 和数据库user_name-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <!--    2)包扫描别名-->
+    <typeAliases>
+        <!-- xxxMapper.xml中  要编写类的完全路径名,如果采用别名方式. 以后再映射文件中不用再写类的完全路径名 -->
+        <package name="com.lagou.model"/>
+        <package name="com.lagou.vo"/>
+    </typeAliases>
+    <!--    3)分页插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+        <!-- 分页参数合理化-->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+</configuration>
